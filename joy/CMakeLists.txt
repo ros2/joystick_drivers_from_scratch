@@ -8,15 +8,20 @@ endif()
 
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
 
-include_directories(${rclcpp_INCLUDE_DIRS} ${sensor_msgs_INCLUDE_DIRS} ${geometry_msgs_INCLUDE_DIRS})
-link_directories(${rclcpp_LIBRARY_DIRS} ${sensor_msgs_LIBRARY_DIRS} ${geometry_msgs_LIBRARY_DIRS})
+include_directories(${rclcpp_INCLUDE_DIRS} ${sensor_msgs_INCLUDE_DIRS})
+link_directories(${rclcpp_LIBRARY_DIRS} ${sensor_msgs_LIBRARY_DIRS})
 
 # for now, this program only exists for Linux hosts, since it calls into
 # the underlying joystick driver provided by the Linux kernel.
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   add_executable(joy_node joy_node_linux.cpp)
-  target_link_libraries(joy_node ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES})
+  target_link_libraries(joy_node ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES})
   install(TARGETS joy_node DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 endif()
+
+# this cross-platform node just listens to the joy topic and prints it
+add_executable(joy_printer joy_printer.cpp)
+target_link_libraries(joy_printer ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES})
+install(TARGETS joy_printer DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+

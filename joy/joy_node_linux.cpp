@@ -60,14 +60,18 @@ int main(int argc, char * argv[])
 
   fd_set read_fds;
   struct timeval tv;
+  int loop_count = 0;
 
   while (rclcpp::ok()) {
-    rclcpp::spin_some(node);
-    while (true) { // all good programs have this
+    loop_count++;
+    bool something_happened = false;
+    for (int num_events = 0; num_events < 10; num_events++) {
+      // we want to drain the joy device before publishing, but not
+      // spend too much time in here in case the axis is moving a lot
       FD_ZERO(&read_fds);
       FD_SET(joy_fd, &read_fds);
       tv.tv_sec = 0;
-      tv.tv_usec = 1000; // wait at most 1ms. this could be smarter
+      tv.tv_usec = 5000; // wait at most 5ms. this could be a lot smarter.
       int retval = select(joy_fd+1, &read_fds, NULL, NULL, &tv);
       if (retval == -1)
         perror("select()");
@@ -80,27 +84,31 @@ int main(int argc, char * argv[])
                  nread, (int)sizeof(struct js_event));
           break;
         }
-        //printf("js event type %d axis %d value %d\n",
-        //       e.type, e.number, e.value);
         switch (e.type & 0x7f) {
           case JS_EVENT_BUTTON:
             if (e.number >= msg->buttons.size())
               msg->buttons.resize(e.number+1);
             msg->buttons[e.number] = e.value;
+            something_happened = true;
             break;
           case JS_EVENT_AXIS:
             if (e.number >= msg->axes.size())
               msg->axes.resize(e.number+1);
             msg->axes[e.number] = e.value / 32767.0;
+            something_happened = true;
             break;
           default:
             break;
         }
       }
       else
-        break; // if we timed out, let ROS spin to do its stuff
+        break; // if we timed out, we've drained the device; now send ros msg.
     }
-    joy_pub->publish(msg);
+    if (something_happened)
+      joy_pub->publish(msg);
+    // avoid calling spin_some too often, since it's a bit heavy right now.
+    if (something_happened || loop_count % 100 == 0)
+      rclcpp::spin_some(node);
   }
   return 0;
 }
