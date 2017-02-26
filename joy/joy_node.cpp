@@ -18,17 +18,17 @@
 #include "sensor_msgs/msg/joy.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 
-// this will only work on POSIX
 #include <sys/types.h>
 #include <sys/time.h>
 #include <unistd.h>
 #include <fcntl.h>
 
-// and this will only work on Linux
-//#include <linux/input.h>
 #include <linux/joystick.h>
 // the equivalent for OS X seems to be IOKit/hid/IOHIDLib.h
 // but it's completely different in basically every way possible
+
+// TODO: address this in the future. The differences between linux/win32/osx
+// are severe enough that they should probably get their own code files
 
 double g_scale_linear;
 double g_scale_angular;
