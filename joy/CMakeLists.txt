@@ -13,7 +13,10 @@ find_package(geometry_msgs REQUIRED)
 include_directories(${rclcpp_INCLUDE_DIRS} ${sensor_msgs_INCLUDE_DIRS} ${geometry_msgs_INCLUDE_DIRS})
 link_directories(${rclcpp_LIBRARY_DIRS} ${sensor_msgs_LIBRARY_DIRS} ${geometry_msgs_LIBRARY_DIRS})
 
-add_executable(joy_node joy_node.cpp)
-target_link_libraries(joy_node ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES})
-
-install(TARGETS joy_node DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+# for now, this program only exists for Linux hosts, since it calls into
+# the underlying joystick driver provided by the Linux kernel.
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+  add_executable(joy_node joy_node_linux.cpp)
+  target_link_libraries(joy_node ${rclcpp_LIBRARIES} ${sensor_msgs_LIBRARIES} ${geometry_msgs_LIBRARIES})
+  install(TARGETS joy_node DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
+endif()
