@@ -29,9 +29,11 @@
 // there will also be a completely different Windows-specific driver
 // these should probably get their own source files; refactor at some point
 
-// at some point, we will want to take in the device name though
-// the 'dev' parameter as in ROS 1. For now, we'll assume /dev/input/js0
-static const char *g_joy_dev_path = "/dev/input/js0";
+/**
+ * at some point, we will want to take in the device name though
+ * the 'dev' parameter as in ROS 1. For now, we'll assume /dev/input/js0
+ */
+static const char *g_joy_dev_path = "/dev/input/js0";  
 
 int main(int argc, char * argv[])
 {

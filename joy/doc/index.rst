@@ -1,22 +1,28 @@
-.. foo documentation master file, created by
-   sphinx-quickstart on Sun Feb 26 11:25:02 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+joy
+===
+Welcome to the ROS 2 joy package.
 
-Welcome to joy's documentation!
-===============================
+Usage
+*****
+Make sure your system has a joystick plugged in, and then you can just run the
+node:
 
-Contents:
+::
+
+    joy
+
+Then, in a separate terminal, you can run a node which subscribes to joystick
+messages and prints them to the terminal:
+
+::
+
+    joy_printer
+
+At the moment, the ``joy`` node only works on Linux, since it calls the Linux
+joystick driver directly.
+
+.. doxygenindex::
 
 .. toctree::
    :maxdepth: 2
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
