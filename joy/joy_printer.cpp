@@ -19,11 +19,13 @@
 void joy_callback(const sensor_msgs::msg::Joy::SharedPtr joy)
 {
   printf("axes = [ ");
-  for (size_t i = 0; i < joy->axes.size(); i++)
+  for (size_t i = 0; i < joy->axes.size(); i++) {
     printf("%+0.3f ", joy->axes[i]);
+  }
   printf("] buttons = [ ");
-  for (size_t i = 0; i < joy->buttons.size(); i++)
+  for (size_t i = 0; i < joy->buttons.size(); i++) {
     printf("%d ", joy->buttons[i]);
+  }
   printf(" ]\n");
 }
 
