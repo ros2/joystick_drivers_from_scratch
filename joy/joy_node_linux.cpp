@@ -35,10 +35,10 @@
 
 #include <fcntl.h>
 #include <linux/joystick.h>
+#include <math.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <math.h>
 
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joy.hpp>
@@ -106,13 +106,13 @@ int main(int argc, char * argv[])
         break;
       }
       if (first_fault) {
-        fprintf(stderr, "Couldn't open joystick %s. Will retry every second.\n", g_joy_dev_path);
+        fprintf(stdout, "Couldn't open joystick %s. Will retry every second.\n", g_joy_dev_path);
         first_fault = false;
       }
       sleep(1.0);
     }
 
-    fprintf(stderr, "Opened joystick %s. deadzone: %f.\n", g_joy_dev_path, deadzone);
+    fprintf(stdout, "Opened joystick %s. deadzone: %f.\n", g_joy_dev_path, deadzone);
 
     tv.tv_sec = 1;
     tv.tv_usec = 0;
@@ -241,7 +241,7 @@ int main(int argc, char * argv[])
     close(joy_fd);
     rclcpp::spin_some(node);
     if (rclcpp::ok()) {
-      fprintf(stderr, "Connection to joystick device lost unexpectedly. Will reopen.");
+      fprintf(stdout, "Connection to joystick device lost unexpectedly. Will reopen.");
     }
   }
 
