@@ -65,8 +65,8 @@ int main(int argc, char * argv[])
 
   rmw_qos_profile_t joy_qos_profile;
   joy_qos_profile.history = RMW_QOS_POLICY_HISTORY_KEEP_LAST;
-  joy_qos_profile.depth = 10;
-  joy_qos_profile.reliability = RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT;
+  joy_qos_profile.depth = 50;
+  joy_qos_profile.reliability = RMW_QOS_POLICY_RELIABILITY_RELIABLE;
   joy_qos_profile.durability = RMW_QOS_POLICY_DURABILITY_VOLATILE;
   auto pub = node->create_publisher<sensor_msgs::msg::Joy>(
     "joy", joy_qos_profile);
