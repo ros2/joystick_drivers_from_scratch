@@ -49,9 +49,9 @@ int main(int argc, char * argv[])
   }
 
   rclcpp::init(argc, argv);
-  auto node = rclcpp::node::Node::make_shared("joy_node");
+  auto node = std::make_shared<rclcpp::Node>("joy_node");
   auto joy_pub = node->create_publisher<sensor_msgs::msg::Joy>(
-    "joy", rmw_qos_profile_sensor_data);
+    "joy", rclcpp::SensorDataQoS{});
 
   auto msg = std::make_shared<sensor_msgs::msg::Joy>();
   msg->header.stamp.sec = 0;
@@ -110,11 +110,7 @@ int main(int argc, char * argv[])
       }
     }
     if (something_happened) {
-      joy_pub->publish(msg);
-    }
-    // avoid calling spin_some too often, since it's a bit heavy right now.
-    if (something_happened || loop_count % 100 == 0) {
-      rclcpp::spin_some(node);
+      joy_pub->publish(*msg);
     }
   }
   return 0;

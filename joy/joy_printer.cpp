@@ -32,9 +32,9 @@ void joy_callback(const sensor_msgs::msg::Joy::SharedPtr joy)
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  auto node = rclcpp::node::Node::make_shared("joy_printer");
+  auto node = std::make_shared<rclcpp::Node>("joy_printer");
   auto subscription = node->create_subscription<sensor_msgs::msg::Joy>
-      ("joy", joy_callback, rmw_qos_profile_sensor_data);
+      ("joy", rclcpp::SensorDataQoS{}, joy_callback);
   rclcpp::spin(node);
   return 0;
 }
